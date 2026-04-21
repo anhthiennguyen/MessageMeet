@@ -1,11 +1,13 @@
-export const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+export const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
-// Generate time slots from startHour to endHour in 30-min increments
+// Generate time slots from startHour to endHour in 15-min increments
 export function generateSlots(startHour = 8, endHour = 22) {
   const slots = [];
   for (let h = startHour; h < endHour; h++) {
     slots.push(`${h}:00`);
+    slots.push(`${h}:15`);
     slots.push(`${h}:30`);
+    slots.push(`${h}:45`);
   }
   return slots;
 }
@@ -62,7 +64,20 @@ function nextSlot(slot, allSlots) {
 }
 
 // Generate the availability message
-export function generateMessage(freeRanges) {
+export function generateMessage(freeRanges, allSlots) {
+  const firstSlot = allSlots[0];
+  const lastSlot = allSlots[allSlots.length - 1];
+
+  function formatRanges(ranges) {
+    return ranges.map((r, i) => {
+      const startsAtDayStart = r.start === firstSlot;
+      const endsAtDayEnd = allSlots.indexOf(r.end) === -1; // end is past last slot
+      if (i === 0 && startsAtDayStart) return `Before ${formatTime(r.end)}`;
+      if (endsAtDayEnd) return `After ${formatTime(r.start)}`;
+      return `${formatTime(r.start)}–${formatTime(r.end)}`;
+    });
+  }
+
   // Build a string key per day's ranges for grouping
   const dayRangeKey = (ranges) =>
     ranges.map((r) => `${r.start}-${r.end}`).join(",");
@@ -81,9 +96,7 @@ export function generateMessage(freeRanges) {
 
   const lines = Object.values(groups).map(({ days, ranges }) => {
     const dayStr = days.map((d) => d.slice(0, 3)).join("/");
-    const timeStr = ranges
-      .map((r) => `${formatTime(r.start)}–${formatTime(r.end)}`)
-      .join(", ");
+    const timeStr = formatRanges(ranges).join(", ");
     return `${dayStr}: ${timeStr}`;
   });
 

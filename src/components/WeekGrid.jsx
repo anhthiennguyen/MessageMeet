@@ -61,6 +61,7 @@ export default function WeekGrid({ busySlots, onChange }) {
               </td>
               {DAYS.map((day) => {
                 const isBusy = (busySlots[day] ?? new Set()).has(slot);
+                const isHour = slot.endsWith(":00");
                 const isHalf = slot.endsWith(":30");
                 return (
                   <td
@@ -68,8 +69,8 @@ export default function WeekGrid({ busySlots, onChange }) {
                     onMouseDown={(e) => onMouseDown(day, slot, e)}
                     onMouseEnter={() => onMouseEnter(day, slot)}
                     className={[
-                      "border-l border-zinc-200 cursor-pointer transition-colors h-5",
-                      isHalf ? "border-b border-dashed border-zinc-100" : "border-b border-zinc-200",
+                      "border-l border-zinc-200 cursor-pointer transition-colors h-3",
+                      isHour ? "border-b border-zinc-200" : isHalf ? "border-b border-dashed border-zinc-200" : "border-b border-zinc-100",
                       isBusy
                         ? "bg-red-200 hover:bg-red-300"
                         : "bg-emerald-50 hover:bg-emerald-100",

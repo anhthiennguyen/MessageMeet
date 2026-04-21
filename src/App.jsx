@@ -41,7 +41,7 @@ export default function App() {
   }
 
   const freeRanges = getFreeRanges(busySlots, SLOTS);
-  const message = generateMessage(freeRanges);
+  const message = generateMessage(freeRanges, SLOTS);
 
   return (
     <div className="min-h-screen bg-white text-zinc-900 font-sans">
