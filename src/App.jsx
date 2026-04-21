@@ -4,7 +4,6 @@ import { db } from "./lib/firebase";
 import { DAYS, generateSlots, getFreeRanges, generateMessage } from "./lib/availability";
 import WeekGrid from "./components/WeekGrid";
 import MessageOutput from "./components/MessageOutput";
-import BookmarkletInstall from "./components/BookmarkletInstall";
 
 const SLOTS = generateSlots(8, 22);
 const DOC_ID = "my-availability";
@@ -87,9 +86,6 @@ export default function App() {
 
         {/* Message */}
         <MessageOutput message={message} />
-
-        {/* Bookmarklet */}
-        <BookmarkletInstall />
       </div>
     </div>
   );
