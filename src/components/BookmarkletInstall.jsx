@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 const PROJECT_ID = "portfolio-ec9ef";
 const DOC_PATH = "availability/my-availability";
 
@@ -48,6 +50,15 @@ const bookmarkletCode = `(async function(){
 const bookmarkletHref = "javascript:" + encodeURIComponent(bookmarkletCode);
 
 export default function BookmarkletInstall() {
+  const linkRef = useRef(null);
+
+  useEffect(() => {
+    // Set href directly to bypass React's javascript: URL sanitization
+    if (linkRef.current) {
+      linkRef.current.setAttribute("href", bookmarkletHref);
+    }
+  }, []);
+
   return (
     <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 flex flex-col gap-3">
       <div>
@@ -59,7 +70,8 @@ export default function BookmarkletInstall() {
 
       <div className="flex items-center gap-3">
         <a
-          href={bookmarkletHref}
+          ref={linkRef}
+          href="#"
           onClick={(e) => e.preventDefault()}
           draggable
           className="px-4 py-2 rounded bg-zinc-900 text-white text-sm hover:bg-zinc-700 transition-colors cursor-grab active:cursor-grabbing select-none"
